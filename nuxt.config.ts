@@ -4,8 +4,18 @@ export default defineNuxtConfig({
     typeCheck: true
   },
 
-  modules: ['@nuxtjs/tailwindcss'],
-
+  modules: ['@nuxtjs/tailwindcss', '@pinia/nuxt', '@vee-validate/nuxt',],
+  veeValidate: {
+    autoImports: true,
+  },
+  pinia: {
+    autoImports: [
+      // automatically imports `defineStore`
+      'defineStore', // import { defineStore } from 'pinia'
+      ['defineStore', 'definePiniaStore'], // import { defineStore as definePiniaStore } from 'pinia'
+    ],
+  },
+  ssr: false,
   vite: {
     css: {
       preprocessorOptions: {
@@ -19,5 +29,26 @@ export default defineNuxtConfig({
 
   build: {
     transpile: ['vuetify']
-  }
+  },
+  runtimeConfig: {
+
+    public: {
+      GOOGLE_ANALYTICS_MEASUREMENTID: process.env.GOOGLE_ANALYTICS_MEASUREMENTID,
+      FIREBASE_API_KEY: process.env.FIREBASE_API_KEY,
+      FIREBASE_AUTH_DOMAIN: process.env.FIREBASE_AUTH_DOMAIN,
+      FIREBASE_PROJECT_ID: process.env.FIREBASE_PROJECT_ID,
+      FIREBASE_APP_ID: process.env.FIREBASE_APP_ID,
+
+    }
+  },
+
+  // vuefire: {
+  //   auth: true,
+  //   config: {
+  //     apiKey: process.env.FIREBASE_API_KEY,
+  //     authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+  //     projectId: process.env.FIREBASE_PROJECT_ID,
+  //     appId: process.env.FIREBASE_APP_ID,
+  //   },
+  // },
 })

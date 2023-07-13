@@ -1,4 +1,5 @@
 {
+  "json.validate.enable": false,
   "[javascript][json][jsonc][css][html][markdown]": {
     "editor.defaultFormatter": "dbaeumer.vscode-eslint",
     "editor.formatOnSave": true,
