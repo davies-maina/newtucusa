@@ -25,14 +25,16 @@
 </template>
 
 <script setup lang="ts">
-import { signInWithEmailAndPassword } from 'firebase/auth'
-const { $auth } = useNuxtApp()
+import { Auth, signInWithEmailAndPassword } from 'firebase/auth'
+definePageMeta({
+  middleware: ['guest']
+})
+const auth = useFirebaseAuth()
 const route = useRoute()
-
-const alert = ref(false)
+const router = useRouter()
+const { errorMess, alert, isError, resetAll } = useShowUserFeedBack()
+resetAll()
 const buttonIsLoading = ref(false)
-const isError = ref(false)
-const errorMess = ref('')
 
 const { handleSubmit } = useForm({
   validationSchema: {
@@ -56,12 +58,13 @@ if (route.query.email) {
   email.value.value = route.query.email
 }
 const submit = handleSubmit(async (values) => {
-  const { user } = await signInWithEmailAndPassword($auth, values.email, values.password)
+  resetAll()
   buttonIsLoading.value = true
   errorMess.value = ''
   try {
+    await signInWithEmailAndPassword(auth as Auth, values.email, values.password)
+    await router.push('/dashboard')
     buttonIsLoading.value = false
-    alert.value = true
   } catch (error:any) {
     buttonIsLoading.value = false
     isError.value = true

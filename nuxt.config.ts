@@ -4,7 +4,7 @@ export default defineNuxtConfig({
     typeCheck: true
   },
 
-  modules: ['@nuxtjs/tailwindcss', '@pinia/nuxt', '@vee-validate/nuxt',],
+  modules: ['@nuxtjs/tailwindcss', '@pinia/nuxt', '@vee-validate/nuxt', 'nuxt-vuefire',],
   veeValidate: {
     autoImports: true,
   },
@@ -42,13 +42,13 @@ export default defineNuxtConfig({
     }
   },
 
-  // vuefire: {
-  //   auth: true,
-  //   config: {
-  //     apiKey: process.env.FIREBASE_API_KEY,
-  //     authDomain: process.env.FIREBASE_AUTH_DOMAIN,
-  //     projectId: process.env.FIREBASE_PROJECT_ID,
-  //     appId: process.env.FIREBASE_APP_ID,
-  //   },
-  // },
+  vuefire: {
+    auth: true,
+    config: {
+      apiKey: process.env.FIREBASE_API_KEY,
+      authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+      projectId: process.env.FIREBASE_PROJECT_ID,
+      appId: process.env.FIREBASE_APP_ID,
+    },
+  },
 })

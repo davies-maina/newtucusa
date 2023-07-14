@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-alert
+    <!-- <v-alert
       v-model="alert"
       class="mb-4"
       :icon="isError ? '$error' : '$success'"
@@ -8,7 +8,7 @@
       close-label="Close Alert"
       :text="isError ? errorMess : `Email sent to ${email.value.value}`"
       :color="isError ? 'error' : 'success'"
-    />
+    /> -->
 
     <v-form>
       <v-row gutter="16">
@@ -40,13 +40,15 @@
 </template>
 
 <script setup lang="ts">
-import { createUserWithEmailAndPassword, sendEmailVerification, updateProfile } from 'firebase/auth'
+import { Auth, createUserWithEmailAndPassword, sendEmailVerification, updateProfile } from 'firebase/auth'
+definePageMeta({
+  middleware: ['guest']
+})
+const auth = useFirebaseAuth()
 // import { Icon } from '../helpers/interface'
-const { $auth } = useNuxtApp()
-const alert = ref(false)
+const { errorMess, alert, isError, successMess, resetAll } = useShowUserFeedBack()
+resetAll()
 const buttonIsLoading = ref(false)
-const isError = ref(false)
-const errorMess = ref('')
 
 const { handleSubmit } = useForm({
   validationSchema: {
@@ -84,11 +86,12 @@ const password = useField('password')
 const passwordConfirmation = useField('passwordConfirmation')
 
 const submit = handleSubmit(async (values) => {
+  resetAll()
   buttonIsLoading.value = true
   errorMess.value = ''
   try {
     const { user } = await createUserWithEmailAndPassword(
-      $auth,
+      auth as Auth,
       values.email,
       values.password,
 
@@ -101,8 +104,9 @@ const submit = handleSubmit(async (values) => {
         handleCodeInApp: true,
       }
     await sendEmailVerification(user, actionCodeSettings)
-    buttonIsLoading.value = false
+    successMess.value = `Email sent to ${email.value.value} .Please verify in order to see personalized data`
     alert.value = true
+    buttonIsLoading.value = false
   } catch (error:any) {
     buttonIsLoading.value = false
     isError.value = true
