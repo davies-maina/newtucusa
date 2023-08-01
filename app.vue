@@ -14,9 +14,9 @@
                 :text="isError ? errorMess : successMess"
                 :color="isError ? 'error' : 'success'"
               />
-              <NuxtPage />
             </v-col>
           </v-row>
+          <NuxtPage />
         </v-container>
       </NuxtLayout>
     </html>
@@ -27,6 +27,7 @@
 const router = useRouter()
 const route = useRoute()
 const user = useCurrentUser()
+
 const { errorMess, alert, isError, successMess } = useShowUserFeedBack()
 
 // we don't need this watcher on server
@@ -36,12 +37,11 @@ onMounted(() => {
       // user logged out
       router.push('/login')
     } else if (user && typeof route.query.redirect === 'string') {
+      console.log('logged in')
       // user logged in
       router.push(route.query.redirect)
-    } else if (user) {
-      console.log('red to dash')
-      router.push('/dashboard')
     }
   })
 })
+
 </script>

@@ -2,6 +2,6 @@
 
 <template>
   <div>
-    Page: Home
+    Welcome to TUCUSA
   </div>
 </template>

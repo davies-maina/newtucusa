@@ -1,6 +1,8 @@
 <template>
-  <div>
-    <!-- <v-alert
+  <v-row justify="center">
+    <v-col cols="12" sm="8" md="6">
+      <div>
+        <!-- <v-alert
       v-model="alert"
       class="mb-4"
       :icon="isError ? '$error' : '$success'"
@@ -10,41 +12,46 @@
       :color="isError ? 'error' : 'success'"
     /> -->
 
-    <v-form>
-      <v-row gutter="16">
-        <v-col>
-          <v-text-field v-model="firstname.value.value" label="First Name" :error-messages="firstname.errorMessage.value" />
-        </v-col>
-        <v-col>
-          <v-text-field v-model="lastname.value.value" label="Last name" :error-messages="lastname.errorMessage.value" />
-        </v-col>
-      </v-row>
-      <v-text-field v-model="email.value.value" :error-messages="email.errorMessage.value" label="Email" type="email" />
-      <v-row gutter="16">
-        <v-col>
-          <v-text-field v-model="password.value.value" label="Password" :error-messages="password.errorMessage.value" />
-        </v-col>
-        <v-col>
-          <v-text-field
-            v-model="passwordConfirmation.value.value"
-            label="Confirm password"
-            :error-messages="passwordConfirmation.errorMessage.value"
-          />
-        </v-col>
-      </v-row>
-      <v-btn type="submit" color="primary" :loading="buttonIsLoading" @click.prevent="submit">
-        Submit
-      </v-btn>
-    </v-form>
-  </div>
+        <v-form>
+          <v-row gutter="16">
+            <v-col>
+              <v-text-field v-model="firstname.value.value" label="First Name" :error-messages="firstname.errorMessage.value" />
+            </v-col>
+            <v-col>
+              <v-text-field v-model="lastname.value.value" label="Last name" :error-messages="lastname.errorMessage.value" />
+            </v-col>
+          </v-row>
+          <v-text-field v-model="email.value.value" :error-messages="email.errorMessage.value" label="Email" type="email" />
+          <v-row gutter="16">
+            <v-col>
+              <v-text-field v-model="password.value.value" label="Password" :error-messages="password.errorMessage.value" type="password" />
+            </v-col>
+            <v-col>
+              <v-text-field
+                v-model="passwordConfirmation.value.value"
+                label="Confirm password"
+                :error-messages="passwordConfirmation.errorMessage.value"
+                type="password"
+              />
+            </v-col>
+          </v-row>
+          <v-btn type="submit" color="primary" :loading="buttonIsLoading" @click.prevent="submit">
+            Submit
+          </v-btn>
+        </v-form>
+      </div>
+    </v-col>
+  </v-row>
 </template>
 
 <script setup lang="ts">
 import { Auth, createUserWithEmailAndPassword, sendEmailVerification, updateProfile } from 'firebase/auth'
+const router = useRouter()
 definePageMeta({
   middleware: ['guest']
 })
 const auth = useFirebaseAuth()
+
 // import { Icon } from '../helpers/interface'
 const { errorMess, alert, isError, successMess, resetAll } = useShowUserFeedBack()
 resetAll()
@@ -68,6 +75,7 @@ const { handleSubmit } = useForm({
       return 'Must be a valid e-mail.'
     },
     password (value: string) {
+      if (!value) { return 'Password is required.' }
       if (value?.length <= 4) { return 'Password must be atleast 5 characters long' }
       return true
     },
@@ -85,7 +93,7 @@ const email = useField('email')
 const password = useField('password')
 const passwordConfirmation = useField('passwordConfirmation')
 
-const submit = handleSubmit(async (values) => {
+const submit = handleSubmit(async (values,) => {
   resetAll()
   buttonIsLoading.value = true
   errorMess.value = ''
@@ -96,15 +104,19 @@ const submit = handleSubmit(async (values) => {
       values.password,
 
     )
+    await router.push('/dashboard')
+
     await updateProfile(user, {
       displayName: `${values.firstname} ${values.lastname}`
     })
     const actionCodeSettings = {
-        url: `http://localhost:3000/login/?email=${user.email}`,
+        // url: 'http://localhost:3000/dashboard',
+        url: 'https://newtucusa.web.app/dashboard',
         handleCodeInApp: true,
       }
     await sendEmailVerification(user, actionCodeSettings)
-    successMess.value = `Email sent to ${email.value.value} .Please verify in order to see personalized data`
+
+    successMess.value = `Email sent to ${user.email}`
     alert.value = true
     buttonIsLoading.value = false
   } catch (error:any) {

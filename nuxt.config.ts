@@ -4,7 +4,7 @@ export default defineNuxtConfig({
     typeCheck: true
   },
 
-  modules: ['@nuxtjs/tailwindcss', '@pinia/nuxt', '@vee-validate/nuxt', 'nuxt-vuefire',],
+  modules: ['@nuxtjs/tailwindcss', '@pinia/nuxt', '@vee-validate/nuxt', 'nuxt-vuefire', '@vueuse/nuxt',],
   veeValidate: {
     autoImports: true,
   },
@@ -15,7 +15,7 @@ export default defineNuxtConfig({
       ['defineStore', 'definePiniaStore'], // import { defineStore as definePiniaStore } from 'pinia'
     ],
   },
-  ssr: false,
+
   vite: {
     css: {
       preprocessorOptions: {
@@ -41,7 +41,7 @@ export default defineNuxtConfig({
 
     }
   },
-
+ssr: false,
   vuefire: {
     auth: true,
     config: {
@@ -51,4 +51,9 @@ export default defineNuxtConfig({
       appId: process.env.FIREBASE_APP_ID,
     },
   },
+  nitro: {
+    prerender: {
+      routes: ['/', '/login', '/register']
+    }
+  }
 })
