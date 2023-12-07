@@ -2,6 +2,9 @@
   <div>
     <Html lang="en-US">
       <NuxtLayout>
+        <v-btn @click="addCustomClaim">
+          Click me
+        </v-btn>
         <v-container fluid fill-height>
           <v-row justify="center">
             <v-col cols="12" sm="8" md="6">
@@ -43,5 +46,9 @@ onMounted(() => {
     }
   })
 })
+async function addCustomClaim () {
+  const { data } = await useFetch('/api/add-custom-claim')
+  console.log(data)
+}
 
 </script>

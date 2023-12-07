@@ -69,7 +69,7 @@ const hidePreviousButton = ref(false)
 const { setUserDocument } = firestoreFuncs()
 
 definePageMeta({
-  middleware: ['auth', 'guest']
+  middleware: ['auth']
 })
 
   onMounted(() => {
@@ -86,7 +86,7 @@ definePageMeta({
             hidePreviousButton.value = true
           }
       } else {
-      setUserDocument('form_current_step', {
+      setUserDocument('form_current_step',user.uid, {
         currentstep: 1
       }).then(() => {
         formStep.value = 1

@@ -15,7 +15,7 @@ const setTheme = () => {
 
 <template>
   <VAppBar>
-    <VAppBarTitle>Human inventory</VAppBarTitle>
+    <VAppBarTitle>Student portal</VAppBarTitle>
 
     <!-- <VBtn variant="text" icon="mdi-cloud-upload" @click="setTheme">
       <Icon name="tabler-sun-moon" color="primary" />

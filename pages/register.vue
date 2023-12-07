@@ -46,6 +46,8 @@
 
 <script setup lang="ts">
 import { Auth, createUserWithEmailAndPassword, sendEmailVerification, updateProfile } from 'firebase/auth'
+const { setUserDocument } = firestoreFuncs()
+
 const router = useRouter()
 definePageMeta({
   middleware: ['guest']
@@ -109,11 +111,16 @@ const submit = handleSubmit(async (values,) => {
     await updateProfile(user, {
       displayName: `${values.firstname} ${values.lastname}`
     })
+    await setUserDocument('personal_details',user.uid,{
+      firstname:values.firstname,
+      lastname:values.lastname
+    })
     const actionCodeSettings = {
-        // url: 'http://localhost:3000/dashboard',
-        url: 'https://newtucusa.web.app/dashboard',
+        url: 'http://localhost:3000/dashboard',
+        // url: 'https://newtucusa.web.app/dashboard',
         handleCodeInApp: true,
       }
+      
     await sendEmailVerification(user, actionCodeSettings)
 
     successMess.value = `Email sent to ${user.email}`

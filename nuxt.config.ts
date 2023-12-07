@@ -49,6 +49,7 @@ ssr: false,
       authDomain: process.env.FIREBASE_AUTH_DOMAIN,
       projectId: process.env.FIREBASE_PROJECT_ID,
       appId: process.env.FIREBASE_APP_ID,
+      storageBucket: "newtucusa.appspot.com",
     },
   },
   nitro: {
