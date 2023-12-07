@@ -41,7 +41,7 @@ export default defineNuxtConfig({
 
     }
   },
-ssr: false,
+  ssr: false,
   vuefire: {
     auth: true,
     config: {
@@ -54,7 +54,7 @@ ssr: false,
   },
   nitro: {
     prerender: {
-      routes: ['/', '/login', '/register']
+      routes: ['/', '/login', '/register', '/dashboard']
     }
   }
 })

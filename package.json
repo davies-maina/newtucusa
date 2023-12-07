@@ -11,6 +11,7 @@
 		"update": "yarn upgrade-interactive --latest"
 	},
 	"devDependencies": {
+		"@nuxt/devtools": "^1.0.4",
 		"@nuxtjs/tailwindcss": "^6.7.0",
 		"@types/vue-tel-input": "^2.1.2",
 		"@vueuse/core": "^10.2.1",
@@ -44,7 +45,7 @@
 		"vue-tel-input": "^8.1.1",
 		"vue3-pdf-app": "^1.0.3",
 		"vuefire": "^3.1.19",
-		"vuetify": "^3.3.2",
+		"vuetify": "^3.4.0",
 		"webpack": "^5.85.1"
 	}
 }

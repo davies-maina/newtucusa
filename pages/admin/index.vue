@@ -1,6 +1,8 @@
 <template>
   <div>
-
+    <v-btn @click="addCustomClaim">
+      Click me
+    </v-btn>
     <v-dialog v-model="dialog" fullscreen :scrim="false" transition="dialog-bottom-transition">
       <template #activator="{ props }">
         <v-btn color="indigo-darken-3" class="mb-2" v-bind="props" @click="resetF">
@@ -65,14 +67,18 @@
       </v-card>
     </v-dialog>
     <v-container>
-      <!-- <v-row justify="center" align="center" style="height: 30vh;"> -->
-      <Cardopportunities :title="'Schorlaships/Bursaries'" :opportunities="getSchorlaships"
-        @show-edit-modal="activateEditState" @delete-doc-id="deleteDoc"></Cardopportunities>
-      <Cardopportunities :title="'Jobs'" :opportunities=getJobs @show-edit-modal="activateEditState"
-        @delete-doc-id="deleteDoc"></Cardopportunities>
-      <Cardopportunities :title="'Internships'" :opportunities="getInternships" @show-edit-modal="activateEditState"
-        @delete-doc-id="deleteDoc">
-      </Cardopportunities>
+
+      <div v-if="getSchorlaships.length > 0 || getJobs.length > 0 || getInternships.length > 0">
+        <!-- <v-row justify="center" align="center" style="height: 30vh;"> -->
+        <Cardopportunities :title="'Schorlaships/Bursaries'" :opportunities="getSchorlaships"
+          @show-edit-modal="activateEditState" @delete-doc-id="deleteDoc"></Cardopportunities>
+        <Cardopportunities :title="'Jobs'" :opportunities=getJobs @show-edit-modal="activateEditState"
+          @delete-doc-id="deleteDoc"></Cardopportunities>
+        <Cardopportunities :title="'Internships'" :opportunities="getInternships" @show-edit-modal="activateEditState"
+          @delete-doc-id="deleteDoc">
+        </Cardopportunities>
+      </div>
+      <p class="text-h5" v-else>Nothing to show. Add opportunities to see things here</p>
     </v-container>
 
   </div>
@@ -314,4 +320,8 @@ const getJobs = computed(() => {
   }
   return []
 })
+async function addCustomClaim() {
+  const { data } = await useFetch('/api/add-custom-claim')
+  console.log(data)
+}
 </script>

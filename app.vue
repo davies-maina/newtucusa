@@ -1,27 +1,20 @@
 <template>
   <div>
     <Html lang="en-US">
-      <NuxtLayout>
-        <v-btn @click="addCustomClaim">
-          Click me
-        </v-btn>
-        <v-container fluid fill-height>
-          <v-row justify="center">
-            <v-col cols="12" sm="8" md="6">
-              <v-alert
-                v-model="alert"
-                class="mb-4"
-                :icon="isError ? '$error' : '$success'"
-                closable
-                close-label="Close Alert"
-                :text="isError ? errorMess : successMess"
-                :color="isError ? 'error' : 'success'"
-              />
-            </v-col>
-          </v-row>
-          <NuxtPage />
-        </v-container>
-      </NuxtLayout>
+    <NuxtLayout>
+
+      <v-container fluid fill-height>
+        <v-row justify="center">
+          <v-col cols="12" sm="8" md="6">
+            <v-alert v-model="alert" class="mb-4" :icon="isError ? '$error' : '$success'" closable
+              close-label="Close Alert" :text="isError ? errorMess : successMess"
+              :color="isError ? 'error' : 'success'" />
+          </v-col>
+        </v-row>
+        <NuxtPage />
+      </v-container>
+    </NuxtLayout>
+
     </html>
   </div>
 </template>
@@ -46,7 +39,7 @@ onMounted(() => {
     }
   })
 })
-async function addCustomClaim () {
+async function addCustomClaim() {
   const { data } = await useFetch('/api/add-custom-claim')
   console.log(data)
 }

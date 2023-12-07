@@ -31,7 +31,9 @@ async function logOut() {
       <v-list-item prepend-icon="mdi-login-variant" title="Sign out" @click="logOut" />
       <v-list-item prepend-icon="mdi-account-plus-outline" title="Dashboard" to="/dashboard" />
 
-      <v-list-item prepend-icon="mdi-account-plus-outline" title="Admin" to="/admin" v-if="isAdmin" />
+      <v-list-item prepend-icon="mdi-shield-crown-outline" title="Admin" to="/admin" v-if="isAdmin" />
+      <v-list-item prepend-icon="mdi-account-school-outline" title="All students" to="/admin/students" v-if="isAdmin" />
+
     </v-list>
   </VNavigationDrawer>
 </template>

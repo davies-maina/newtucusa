@@ -21,7 +21,7 @@
         <div v-if="loadingAllOpportunities" class="text-center">
           <v-progress-circular indeterminate color="primary"></v-progress-circular>
         </div>
-        <Useropportunities :title="'Internships'" :opportunities="filteredOpps"></Useropportunities>
+        <Useropportunities :title="'Internships'" :opportunities="filteredOpps" v-else></Useropportunities>
         <!-- <Useropportunities v-else></Useropportunities> -->
       </v-col>
     </v-row>
