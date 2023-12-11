@@ -1,8 +1,8 @@
 <template>
   <div>
-    <v-btn @click="addCustomClaim">
+    <!-- <v-btn @click="addCustomClaim">
       Click me
-    </v-btn>
+    </v-btn> -->
     <v-dialog v-model="dialog" fullscreen :scrim="false" transition="dialog-bottom-transition">
       <template #activator="{ props }">
         <v-btn color="indigo-darken-3" class="mb-2" v-bind="props" @click="resetF">

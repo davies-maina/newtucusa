@@ -54,7 +54,7 @@ export default defineNuxtConfig({
   },
   nitro: {
     prerender: {
-      routes: ['/', '/login', '/register', '/dashboard']
+      routes: ['/', '/login', '/register', '/dashboard', '/schorlaships', '/jobs', '/internships', '/admin']
     }
   }
 })

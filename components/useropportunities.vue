@@ -2,7 +2,7 @@
     <div>
         <v-row justify="center">
             <v-col class="text-center">
-                <h1 class="text-h4">{{ title }}</h1>
+                <h1 class="text-h6">{{ title }}</h1>
                 <p v-if="cdfbanner">If CDF is selected, CDF results will be explicitly for your ward ({{ home }})</p>
             </v-col>
         </v-row>
@@ -23,7 +23,8 @@
                             {{ plaintext(opportunity.desc) }}
                         </v-card-text>
                         <v-card-text v-else>
-                            {{ sliceString(plaintext(opportunity.desc)) }}... <NuxtLink to="" class="text-primary">Read more
+                            {{ sliceString(plaintext(opportunity.desc)) }}... <NuxtLink
+                                :to="`${name?.toString()}/${opportunity.id}`" class="text-primary">Read more
                             </NuxtLink>
                         </v-card-text>
                         <v-card-actions>

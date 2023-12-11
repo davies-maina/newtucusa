@@ -31,7 +31,7 @@
           </v-row> -->
       </v-col>
       <v-col v-if="opportunity.pdf">
-        <v-btn size="x-large" :to="`/schorlaships/${opportunity.id}/pdf/${replaceString(opportunity.pdfPath!)}`" @click="setPdf(opportunity.pdf)">View
+        <v-btn size="x-large" :to="`/schorlaships/${opportunity.id}/pdf/${replaceString(opportunity.pdfPath!)}`" @click="setPdf(opportunity.pdf)" :nuxt="true">View
           Attached File</v-btn>
       </v-col>
     </v-row>
