@@ -116,8 +116,8 @@ const submit = handleSubmit(async (values,) => {
       lastname: values.lastname
     })
     const actionCodeSettings = {
-      // url: 'http://localhost:3000/dashboard',
-      url: 'https://newtucusa.web.app/dashboard',
+      url: 'http://localhost:3000/dashboard',
+      // url: 'https://newtucusa.web.app/dashboard',
       handleCodeInApp: true,
     }
 

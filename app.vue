@@ -33,7 +33,7 @@ onMounted(() => {
       // user logged out
       router.push('/login')
     } else if (user && typeof route.query.redirect === 'string') {
-      console.log('logged in')
+      
       // user logged in
       router.push(route.query.redirect)
     }

@@ -81,6 +81,7 @@ definePageMeta({
     promise.value.then((currentstep) => {
       if (currentstep != null) {
           loadingData.value = pending.value
+          //TODO:change this back
           formStep.value = currentstep!.currentstep
           if (currentstep!.currentstep === 2 || currentstep!.currentstep === 3) {
             hidePreviousButton.value = true

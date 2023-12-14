@@ -61,8 +61,8 @@ const schemas = [
       .string()
       .matches(/^[a-zA-Z0-9]*$/, 'Only alphanumeric characters are allowed')
       .required(),
-    coursetaken: yup.string().required(),
-    coursecategory: yup.string().required(),
+    coursetaken: yup.string().required('Field of study is required'),
+    coursecategory: yup.string().required('Course specialization is required'),
     academicprogram: yup.string().required()
 
   }),
@@ -310,12 +310,13 @@ function handleSelectedCon($event: any) {
         </v-row>
         <v-row gutter="16">
           <v-col>
-            <label for="schoolid">Course taken</label>
-            <Field id="coursetaken" name="coursetaken" as="v-text-field" :error-messages="errors.coursetaken" />
+            <label for="schoolid">Field of study</label>
+            <Field id="coursetaken" name="coursetaken" as="v-text-field" :error-messages="errors.coursetaken" hint="e.g Engineering" />
           </v-col>
           <v-col>
-            <label for="schoolid">Course category</label>
-            <Field id="coursecategory" name="coursecategory" as="v-text-field" :error-messages="errors.coursecategory" />
+            <label for="schoolid">Course specialization</label>
+            <Field id="coursecategory" name="coursecategory" as="v-text-field" :error-messages="errors.coursecategory" hint="e.g Mechanical Engineering"
+ />
           </v-col>
         </v-row>
       </template>

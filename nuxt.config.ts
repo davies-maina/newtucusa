@@ -4,7 +4,14 @@ export default defineNuxtConfig({
     typeCheck: true
   },
 
-  modules: ['@nuxtjs/tailwindcss', '@pinia/nuxt', '@vee-validate/nuxt', 'nuxt-vuefire', '@vueuse/nuxt',],
+  modules: ['@nuxtjs/tailwindcss', '@pinia/nuxt', '@vee-validate/nuxt', 'nuxt-vuefire', '@vueuse/nuxt',"nuxt-security"],
+  security: {
+    headers: {
+      contentSecurityPolicy: {
+        'connect-src': ["'self'", 'http://universities.hipolabs.com'],
+      },
+    },
+  },
   veeValidate: {
     autoImports: true,
   },

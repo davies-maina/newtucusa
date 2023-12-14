@@ -21,6 +21,7 @@
 		"eslint-plugin-vue": "^9.14.1",
 		"firebase-functions": "^4.5.0",
 		"firebase-functions-test": "^3.1.0",
+		"nuxt-security": "^1.0.0",
 		"typescript": "^5.3.2",
 		"vue-tsc": "^1.8.24"
 	},
