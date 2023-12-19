@@ -2,6 +2,8 @@
 // import { Form, Field, ErrorMessage } from 'vee-validate'
 import * as yup from 'yup'
 import { VueTelInput } from 'vue-tel-input'
+import counties from '../helpers/counties'
+
 // import { Cropper } from 'vue-advanced-cropper'
 // import 'vue-advanced-cropper/dist/style.css'
 
@@ -13,11 +15,16 @@ defineProps({
   }
 })
 const user = await getCurrentUser()
-
-const { getAllCons, getWards } = getConstituencies()
+const allWards = ref<string[]>([])
+const { getWards } = getConstituencies()
 const { finalCounties } = getCounties()
 const { setUserDocument } = firestoreFuncs()
 
+const allCountyNames = () => {
+  const names = counties.map(county => county.name)
+  names.unshift('Diaspora')
+  return names
+}
 const currentStep = ref(1)
 
 const phonenumber = ref(null)
@@ -27,6 +34,7 @@ const showUnivNameInput = ref(false)
 
 const showPostalAndAddress = ref(false)
 const showConstituencies = ref(false)
+const turkanaSelected = ref(false)
 const wards = ref<string[]>([])
 const showWard = ref(false)
 const buttonIsLoading = ref(false)
@@ -34,9 +42,6 @@ onMounted(() => {
   currentStep.value = useState<number>('formstep').value
 })
 
-interface IData {
-  name: string
-}
 const schools = ref<string[]>([])
 const schemas = [
   yup.object({
@@ -73,11 +78,23 @@ const schemas = [
       .string()
 
       .matches(/^[a-zA-Z0-9][a-zA-Z0-9\s]*$/, 'Invalid postal code.'),
-    constituency: yup.string().when('$showConstituencies', (showConstituencies, schema) => {
-      return showConstituencies ? schema.required() : schema
-    }),
-    ward: yup.string().when('$showWard', (showWard, schema) => {
-      return showWard ? schema.required() : schema
+      constituency: yup
+      .string()
+
+      .when('location', (location, schema) => {
+        if (location.includes('Diaspora')) {
+          return schema
+        }
+
+        return schema.trim().required('constituency is required')
+      }),
+
+    ward: yup.string().when('location', (location, schema) => {
+      if (location.includes('Turkana')) {
+        return schema.trim().required('ward is required')
+        }
+
+      return schema
     })
 
   }),
@@ -103,7 +120,7 @@ const progressVal = computed(() => {
   return currentStep.value / 3 * 100
 })
 
-async function nextStep(values: any) {
+async function nextStep (values: any) {
   if (currentStep.value === 1) {
     buttonIsLoading.value = true
 
@@ -121,8 +138,6 @@ async function nextStep(values: any) {
     }
 
     buttonIsLoading.value = false
-
-
   }
   if (currentStep.value === 2) {
     buttonIsLoading.value = true
@@ -130,10 +145,10 @@ async function nextStep(values: any) {
       institutiontype: values.institutiontype ?? '',
       academicprogram: values.academicprogram ?? '',
       schoolid: values.schoolid ?? '',
-      coursetaken: values.coursetaken ?? '',
-      coursecategory: values.coursecategory ?? '',
-      institutionname: values.institutionname ?? '',
-      institutioncounty: values.institutioncounty ?? ''
+      coursetaken: values.coursetaken?.toUpperCase() ?? '',
+      coursecategory: values.coursecategory?.toUpperCase() ?? '',
+      institutionname: values.institutionname?.toUpperCase() ?? '',
+      institutioncounty: values.institutioncounty?.toUpperCase() ?? ''
     }
     const c = await setUserDocument('school_details', user.uid, vals)
     if (c) {
@@ -147,7 +162,6 @@ async function nextStep(values: any) {
       }
     }
     buttonIsLoading.value = false
-
   }
   if (currentStep.value === 3) {
     buttonIsLoading.value = true
@@ -166,23 +180,23 @@ async function nextStep(values: any) {
       })
       if (f) {
         useState<number | null>('formstep').value = 0
+        useState<Boolean>('successSign').value = true
       }
     }
-
   }
   // if (currentStep.value === 0) {
   //   currentStep.value = +1
   // }
 }
 
-function prevStep() {
+function prevStep () {
   if (currentStep.value <= 1) {
     return
   }
 
   currentStep.value--
 }
-function validateI(val: any) {
+function validateI (val: any) {
   if (val?.valid !== undefined) {
     phonenumberValid.value = val?.valid
     // console.log('p', phonenumberValid.value)
@@ -191,37 +205,58 @@ function validateI(val: any) {
   // console.log(val?.valid)
   // console.log('p', phonenumberValid.value)
 }
-function handleUnivInput($event: any) {
+const getSubForCon = (countyName:string) => {
+  const county = counties.find(c => c.name === countyName)
+  return county ? county.sub_counties : []
+}
+function handleUnivInput ($event: any) {
   showUnivNameInput.value = true
   institutiontype.value = $event
 }
-const handleSearch = useDebounceFn(async ($event: any) => {
-  // const school = await $fetch(`http://universities.hipolabs.com/search?name=${$event}&country=kenya`)
-  // console.log('sc', school)
-  if ($event.length >= 3) {
-    const { data } = await useFetch<IData[]>('http://universities.hipolabs.com/search', {
-      query: { name: $event, country: 'kenya' },
-      // pick: ['name']
-    })
-    data.value?.forEach(e => schools.value.push(e.name))
-  }
+// const handleSearch = useDebounceFn(async ($event: any) => {
+//   // const school = await $fetch(`http://universities.hipolabs.com/search?name=${$event}&country=kenya`)
+//   // console.log('sc', school)
+//   if ($event.length >= 3) {
+//     const { data } = await useFetch<IData[]>('http://universities.hipolabs.com/search', {
+//       query: { name: $event, country: 'kenya' },
+//       // pick: ['name']
+//     })
+//     data.value?.forEach(e => schools.value.push(e.name))
+//   }
+const cons = ref<string | null>(null)
 
-  // schools.value = data as unknown as [] || []
-}, 1000, { maxWait: 5000 })
+//   // schools.value = data as unknown as [] || []
+// }, 1000, { maxWait: 5000 })
 
-function handleLocation($event: any) {
+function handleLocation ($event: any) {
+  cons.value = null
+
   showPostalAndAddress.value = true
-  if ($event === 'Turkana') {
-    showConstituencies.value = true
-  } else {
+  if ($event !== 'Diaspora') {
+    if ($event === 'Turkana') {
+      turkanaSelected.value = true
+    } else {
+      turkanaSelected.value = false
+    }
+    const subCounties = getSubForCon($event)
+    if (subCounties.length > 0) {
+      allWards.value = subCounties
+      showConstituencies.value = true
+    } else {
     showConstituencies.value = false
   }
+  } else {
+    showConstituencies.value = false
+    showWard.value = false
+    cons.value = null
+  }
 }
-function handleSelectedCon($event: any) {
+function handleSelectedCon ($event: any) {
   wards.value = getWards($event)!
-  showWard.value = true
+  if (turkanaSelected.value) {
+    showWard.value = true
+  }
 }
-
 // const remoteSchoolName = await $fetch(`https://pokeapi.co/api/v2/pokemon/${currentId.value}`)
 // currentPokemon.value = {
 //   name: pokemon.name,
@@ -241,8 +276,9 @@ function handleSelectedCon($event: any) {
     </div>
 
     <v-progress-linear :model-value="progressVal" class="my-4" />
-    <Form v-slot="{ errors, validate }" :validation-schema="currentSchema" keep-values @submit="nextStep">
-      <!-- {{ errors }}{{ currentStep }} -->
+
+    <Form v-slot="{ errors, validate}" :validation-schema="currentSchema" keep-values @submit="nextStep">
+      <!-- {{ errors }}{{ currentStep }} {{ showWard }} -->
       <!-- dd{{ values }} -->
       <template v-if="currentStep === 1">
         <label for="Date of birth">Date of birth</label>
@@ -270,25 +306,41 @@ function handleSelectedCon($event: any) {
       <template v-if="currentStep === 2">
         <label for="insttype">Type of institution</label>
         <Field id="institutiontype" v-slot="{ field }" name="institutiontype">
-          <v-select v-bind="field" label="select type of institution"
-            :items="['University', 'College', 'Technical or vocational']" :error-messages="errors.institutiontype"
-            :value="field.value" @update:model-value="handleUnivInput" />
+          <v-select
+            v-bind="field"
+            label="select type of institution"
+            :items="['University', 'College', 'Technical or vocational']"
+            :error-messages="errors.institutiontype"
+            :value="field.value"
+            @update:model-value="handleUnivInput"
+          />
         </Field>
         <div v-if="showUnivNameInput">
           <v-row gutter="16">
             <v-col>
               <label for="instname">{{ institutiontype }} name </label>
               <Field id="institutionname" v-slot="{ field }" autocomplete="off" name="institutionname">
-                <v-combobox autocomplete="off" v-bind="field" :items="schools"
-                  :hint="`If your ${institutiontype} name is not available on the dropdown please type it in full`"
-                  :error-messages="errors.institutionname" keep-values @update:model-value="handleSearch" />
+                <v-combobox
+                  autocomplete="off"
+                  v-bind="field"
+                  :items="schools"
+                  :hint="`Enter ${institutiontype} name in full as is on official docs for data consistency`"
+                  :error-messages="errors.institutionname"
+                  keep-values
+                />
               </Field>
             </v-col>
             <v-col>
-              <label for="instcounty">Institution county</label>
+              <label for="instcounty">Institution location/county</label>
               <Field id="institutioncounty" v-slot="{ field }" name="institutioncounty">
-                <v-combobox v-bind="field" :items="finalCounties" :error-messages="errors.institutioncounty" keep-values
-                  hint="Type to see suggestions" />
+                <v-combobox
+                  v-bind="field"
+                  :items="finalCounties"
+                  :error-messages="errors.institutioncounty"
+                  keep-values
+                  hint="Type to see suggestions.
+                  If it does not appear please type as is on official docs for data consistency"
+                />
               </Field>
             </v-col>
           </v-row>
@@ -297,44 +349,90 @@ function handleSelectedCon($event: any) {
           <v-col>
             <label for="aprogram">Academic program</label>
             <Field id="academicprogram" v-slot="{ field }" name="academicprogram">
-              <v-select v-bind="field" label="Select Academic program"
+              <v-select
+                v-bind="field"
+                label="Select Academic program"
                 :items="['Certificate', 'Diploma', 'Undergraduate', 'Post-graduate diploma', 'Masters', 'PhD']"
-                :error-messages="errors.academicprogram" />
+                :error-messages="errors.academicprogram"
+              />
             </Field>
           </v-col>
           <v-col>
             <label for="schoolid">School ID</label>
-            <Field id="schoolid" name="schoolid" as="v-text-field" :error-messages="errors.schoolid"
-              hint="This will help us reduce election irreguralities and is completely safe with us" />
+            <Field
+              id="schoolid"
+              name="schoolid"
+              as="v-text-field"
+              :error-messages="errors.schoolid"
+              hint="This will help us reduce election irreguralities and is completely safe with us. Type as is on official docs"
+            />
           </v-col>
         </v-row>
         <v-row gutter="16">
           <v-col>
             <label for="schoolid">Field of study</label>
-            <Field id="coursetaken" name="coursetaken" as="v-text-field" :error-messages="errors.coursetaken" hint="e.g Engineering" />
+            <Field
+              id="coursetaken"
+              name="coursetaken"
+              as="v-text-field"
+              :error-messages="errors.coursetaken"
+              hint="e.g Engineering  beware of spelling"
+            />
           </v-col>
           <v-col>
             <label for="schoolid">Course specialization</label>
-            <Field id="coursecategory" name="coursecategory" as="v-text-field" :error-messages="errors.coursecategory" hint="e.g Mechanical Engineering"
- />
+            <Field
+              id="coursecategory"
+              name="coursecategory"
+              as="v-text-field"
+              :error-messages="errors.coursecategory"
+              hint="e.g Mechanical Engineering  beware of spelling"
+            />
           </v-col>
         </v-row>
       </template>
 
       <template v-if="currentStep === 3">
-        <label for="location">Select location</label>
-        <Field id="location" v-slot="{ field }" name="location">
-          <v-select v-bind="field" :items="['Turkana', 'Diaspora']" :error-messages="errors.location"
-            @update:model-value="handleLocation" />
+        <label for="location">Select location/County</label>
+        <Field id="location" v-slot="{field}" name="location">
+          <v-select
+
+            v-bind="field"
+
+            :items="allCountyNames()"
+            :error-messages="errors.location"
+
+            @update:model-value="handleLocation"
+          />
+          <!-- <v-autocomplete
+            v-bind="field"
+
+            :items="allCountyNames()"
+            :error-messages="errors.location"
+            hint="if you are outside Kenya search & enter Diaspora"
+            @update:model-value="handleLocation"
+          /> -->
+          <!-- <v-autocomplete
+            v-bind="field"
+            :items="allCountyNames()"
+            :error-messages="errors.location"
+            @update:model-value="handleLocation"
+          /> -->
         </Field>
         <div v-if="showConstituencies">
           <label for="constituency">Constituency</label>
-          <Field id="constituency" v-slot="{ field }" name="constituency">
-            <v-select v-bind="field" :items="getAllCons" :error-messages="errors.constituency" label="Select constituency"
-              @update:model-value="handleSelectedCon" />
+          <Field id="constituency" v-slot="{ field }" v-model="cons" name="constituency">
+            <v-select
+              :model-value="cons"
+              v-bind="field"
+              :items="allWards"
+              :error-messages="errors.constituency"
+              label="Select constituency"
+              @update:model-value="handleSelectedCon"
+            />
           </Field>
         </div>
-        <div v-if="showWard">
+        <div v-if="showWard && turkanaSelected">
           <label for="ward" />
           <Field id="ward" v-slot="{ field }" name="ward">
             <v-select v-bind="field" :items="wards" :error-messages="errors.ward" label="Select ward" />
@@ -365,21 +463,40 @@ function handleSelectedCon($event: any) {
       <v-btn v-if="currentStep !== 3" type="submit" class="mt-4">
         Next
       </v-btn> -->
-      <v-btn v-if="currentStep !== 1" color="primary" primary class="m-3 mt-4" type="button" :disabled="hidePrevBtn"
-        @click="prevStep">
+      <v-btn
+        v-if="currentStep !== 1"
+        color="primary"
+        primary
+        class="m-3 mt-4"
+        type="button"
+        :disabled="hidePrevBtn"
+        @click="prevStep"
+      >
         Previous
       </v-btn>
 
-      <v-btn v-if="currentStep !== 3" color="primary" primary class="m-3 mt-4" type="submit" :loading="buttonIsLoading"
-        @click="validate">
+      <v-btn
+        v-if="currentStep !== 3"
+        color="primary"
+        primary
+        class="m-3 mt-4"
+        type="submit"
+        :loading="buttonIsLoading"
+        @click="validate"
+      >
         Next
       </v-btn>
-      <v-btn v-if="currentStep === 3" color="primary" primary type="submit" class="m-3 mt-4" :loading="buttonIsLoading"
-        @click="validate">
+      <v-btn
+        v-if="currentStep === 3"
+        color="primary"
+        primary
+        type="submit"
+        class="m-3 mt-4"
+        :loading="buttonIsLoading"
+        @click="validate"
+      >
         Finish
       </v-btn>
-
-      <!-- <pre>{{ values }}</pre> -->
     </Form>
   </div>
 </template>

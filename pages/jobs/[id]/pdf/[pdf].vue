@@ -1,8 +1,10 @@
 <template>
-    <v-container>
-        <pdf :url="getPdf()!" v-if="getPdf()"></pdf>
-        <h4 class="text-h5" v-else>Nothing to view </h4>
-    </v-container>
+  <v-container>
+    <pdf v-if="getPdf()" :url="getPdf()!" />
+    <h4 v-else class="text-h5">
+      Nothing to view
+    </h4>
+  </v-container>
 </template>
 
 <script setup lang="ts">

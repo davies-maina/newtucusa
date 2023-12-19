@@ -1,20 +1,24 @@
 <template>
   <div>
     <Html lang="en-US">
-    <NuxtLayout>
-
-      <v-container fluid fill-height>
-        <v-row justify="center">
-          <v-col cols="12" sm="8" md="6">
-            <v-alert v-model="alert" class="mb-4" :icon="isError ? '$error' : '$success'" closable
-              close-label="Close Alert" :text="isError ? errorMess : successMess"
-              :color="isError ? 'error' : 'success'" />
-          </v-col>
-        </v-row>
-        <NuxtPage />
-      </v-container>
-    </NuxtLayout>
-
+      <NuxtLayout>
+        <v-container fluid fill-height>
+          <v-row justify="center">
+            <v-col cols="12" sm="8" md="6">
+              <v-alert
+                v-model="alert"
+                class="mb-4"
+                :icon="isError ? '$error' : '$success'"
+                closable
+                close-label="Close Alert"
+                :text="isError ? errorMess : successMess"
+                :color="isError ? 'error' : 'success'"
+              />
+            </v-col>
+          </v-row>
+          <NuxtPage />
+        </v-container>
+      </NuxtLayout>
     </html>
   </div>
 </template>
@@ -33,15 +37,14 @@ onMounted(() => {
       // user logged out
       router.push('/login')
     } else if (user && typeof route.query.redirect === 'string') {
-      
       // user logged in
       router.push(route.query.redirect)
     }
   })
 })
-async function addCustomClaim() {
-  const { data } = await useFetch('/api/add-custom-claim')
-  console.log(data)
-}
+// async function addCustomClaim () {
+//   const { data } = await useFetch('/api/add-custom-claim')
+//   console.log(data)
+// }
 
 </script>

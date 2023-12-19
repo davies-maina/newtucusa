@@ -2,11 +2,12 @@
   <div v-if="opportunities!.length > 0">
     <v-row justify="center">
       <v-col class="text-center">
-        <h1 class="text-h4">{{ title }}</h1>
+        <h1 class="text-h4">
+          {{ title }}
+        </h1>
       </v-col>
     </v-row>
     <v-row>
-
       <v-col v-for="(opportunity, index) in opportunities" :key="opportunity.id" cols="auto">
         <v-card class="mx-auto my-8" max-width="344" min-width="300" elevation="16" min-height="300">
           <v-card-item>
@@ -22,7 +23,8 @@
             {{ plaintext(opportunity.desc ?? '') }}
           </v-card-text>
           <v-card-text v-else>
-            {{ sliceString(plaintext(opportunity.desc ?? '')) }}... <NuxtLink to="" class="text-primary">Read more
+            {{ sliceString(plaintext(opportunity.desc ?? '')) }}... <NuxtLink to="" class="text-primary">
+              Read more
             </NuxtLink>
           </v-card-text>
           <v-card-actions>
@@ -38,20 +40,19 @@
             </v-btn>
           </v-card-actions>
         </v-card>
-
       </v-col>
-
     </v-row>
   </div>
 </template>
 
 <script setup lang="ts">
-import { Iopportunity } from '~/helpers/interface';
+import type { Iopportunity } from '~/helpers/interface'
 
-import { sliceString, checkStringLength, plaintext } from "~/helpers/textutils";
-const variants = ['elevated', 'flat', 'tonal', 'outlined']
+import { sliceString, checkStringLength, plaintext } from '~/helpers/textutils'
+// const variants = ['elevated', 'flat', 'tonal', 'outlined']
 // "text" | "flat" | "elevated" | "tonal" | "outlined" | "plain"> | undefined'
-const props = defineProps({
+defineEmits(['deleteDocId', 'showEditModal'])
+defineProps({
 
   title: {
     type: String,
@@ -63,13 +64,6 @@ const props = defineProps({
   }
 })
 
-
-
-
-
-
 </script>
-
-
 
 <style></style>

@@ -30,6 +30,8 @@
     "tailwindcss/migration-from-tailwind-2": "error",
     "tailwindcss/no-arbitrary-value": "off",
     "tailwindcss/no-contradicting-classname": "error",
+    "@typescript-eslint/consistent-type-imports": "error",
+
     "vue/html-button-has-type": [
       "error",
       {

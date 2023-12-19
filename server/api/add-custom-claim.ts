@@ -1,6 +1,7 @@
+/* eslint-disable no-console */
 import { initializeApp, cert } from 'firebase-admin/app'
 import { getAuth } from 'firebase-admin/auth'
-const app = initializeApp({
+initializeApp({
   credential: cert(process.env.GOOGLE_APPLICATION_CREDENTIALS as string)
 })
 

@@ -1,5 +1,21 @@
 <template>
   <div v-if="!showVerifyEmailBanner">
+    <v-snackbar
+      v-model="successSignUp"
+      multi-line
+    >
+      Signup complete &#128079;. Welcome to TUCUSA, {{ user.displayName.split("")[0] }}
+
+      <template #actions>
+        <v-btn
+          color="red"
+          variant="text"
+          @click="successSignUp = false"
+        >
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
     <div v-if="!loadingData">
       <div v-if="formStep! > 0">
         <v-row justify="center">
@@ -63,6 +79,7 @@ import { doc } from 'firebase/firestore'
 const db = useFirestore()
 const user = await getCurrentUser()
 const formStep = useState<number | null>('formstep', () => null)
+const successSignUp = useState<boolean>('successSign', () => false)
 const loadingData = ref(false)
 const showVerifyEmailBanner = ref(false)
 const hidePreviousButton = ref(false)
@@ -81,13 +98,14 @@ definePageMeta({
     promise.value.then((currentstep) => {
       if (currentstep != null) {
           loadingData.value = pending.value
-          //TODO:change this back
+
           formStep.value = currentstep!.currentstep
+          // FIXME: 'Maybe one day'
           if (currentstep!.currentstep === 2 || currentstep!.currentstep === 3) {
             hidePreviousButton.value = true
           }
       } else {
-      setUserDocument('form_current_step',user.uid, {
+      setUserDocument('form_current_step', user.uid, {
         currentstep: 1
       }).then(() => {
         formStep.value = 1
@@ -95,6 +113,7 @@ definePageMeta({
       })
       }
     }).catch((e) => {
+      // eslint-disable-next-line no-console
       console.log('error', e)
     })
     // if (currentstep.data.value !== undefined) {

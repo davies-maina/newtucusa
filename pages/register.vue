@@ -15,24 +15,42 @@
         <v-form>
           <v-row gutter="16">
             <v-col>
-              <v-text-field v-model="firstname.value.value" label="First Name"
-                :error-messages="firstname.errorMessage.value" />
+              <v-text-field
+                v-model="firstname.value.value"
+                label="First Name"
+                :error-messages="firstname.errorMessage.value"
+              />
             </v-col>
             <v-col>
-              <v-text-field v-model="lastname.value.value" label="Last name"
-                :error-messages="lastname.errorMessage.value" />
+              <v-text-field
+                v-model="lastname.value.value"
+                label="Last name"
+                :error-messages="lastname.errorMessage.value"
+              />
             </v-col>
           </v-row>
-          <v-text-field v-model="email.value.value" :error-messages="email.errorMessage.value" label="Email"
-            type="email" />
+          <v-text-field
+            v-model="email.value.value"
+            :error-messages="email.errorMessage.value"
+            label="Email"
+            type="email"
+          />
           <v-row gutter="16">
             <v-col>
-              <v-text-field v-model="password.value.value" label="Password" :error-messages="password.errorMessage.value"
-                type="password" />
+              <v-text-field
+                v-model="password.value.value"
+                label="Password"
+                :error-messages="password.errorMessage.value"
+                type="password"
+              />
             </v-col>
             <v-col>
-              <v-text-field v-model="passwordConfirmation.value.value" label="Confirm password"
-                :error-messages="passwordConfirmation.errorMessage.value" type="password" />
+              <v-text-field
+                v-model="passwordConfirmation.value.value"
+                label="Confirm password"
+                :error-messages="passwordConfirmation.errorMessage.value"
+                type="password"
+              />
             </v-col>
           </v-row>
           <v-btn type="submit" color="primary" :loading="buttonIsLoading" @click.prevent="submit">
@@ -45,7 +63,7 @@
 </template>
 
 <script setup lang="ts">
-import { Auth, createUserWithEmailAndPassword, sendEmailVerification, updateProfile } from 'firebase/auth'
+import { type Auth, createUserWithEmailAndPassword, sendEmailVerification, updateProfile } from 'firebase/auth'
 const { setUserDocument } = firestoreFuncs()
 
 const router = useRouter()
@@ -61,27 +79,27 @@ const buttonIsLoading = ref(false)
 
 const { handleSubmit } = useForm({
   validationSchema: {
-    firstname(value: string) {
+    firstname (value: string) {
       if (value?.length >= 2) { return true }
 
       return 'Name needs to be at least 2 characters.'
     },
-    lastname(value: string) {
+    lastname (value: string) {
       if (value?.length >= 2) { return true }
 
       return 'Name needs to be at least 2 characters.'
     },
-    email(value: string) {
+    email (value: string) {
       if (/^[a-z0-9.-]+@[a-z0-9.-]+\.[a-z]+$/i.test(value)) { return true }
 
       return 'Must be a valid e-mail.'
     },
-    password(value: string) {
+    password (value: string) {
       if (!value) { return 'Password is required.' }
       if (value?.length <= 4) { return 'Password must be atleast 5 characters long' }
       return true
     },
-    passwordConfirmation(value: string) {
+    passwordConfirmation (value: string) {
       if (password.value.value === value) {
         return true
       }
@@ -109,15 +127,15 @@ const submit = handleSubmit(async (values,) => {
     await router.push('/dashboard')
 
     await updateProfile(user, {
-      displayName: `${values.firstname} ${values.lastname}`
+      displayName: `${values.firstname} ${values.lastname}`.toUpperCase()
     })
     await setUserDocument('personal_details', user.uid, {
-      firstname: values.firstname,
-      lastname: values.lastname
+      firstname: values.firstname?.toUpperCase(),
+      lastname: values.lastname?.toUpperCase()
     })
     const actionCodeSettings = {
-      url: 'http://localhost:3000/dashboard',
-      // url: 'https://newtucusa.web.app/dashboard',
+      // url: 'http://localhost:3000/dashboard',
+      url: 'https://newtucusa.web.app/dashboard',
       handleCodeInApp: true,
     }
 

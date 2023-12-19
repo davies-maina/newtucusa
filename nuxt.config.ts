@@ -4,13 +4,23 @@ export default defineNuxtConfig({
     typeCheck: true
   },
 
-  modules: ['@nuxtjs/tailwindcss', '@pinia/nuxt', '@vee-validate/nuxt', 'nuxt-vuefire', '@vueuse/nuxt',"nuxt-security"],
+  modules: ['@nuxtjs/tailwindcss', '@pinia/nuxt', '@vee-validate/nuxt', 'nuxt-vuefire', '@vueuse/nuxt', 'nuxt-security'],
   security: {
-    headers: {
-      contentSecurityPolicy: {
-        'connect-src': ["'self'", 'http://universities.hipolabs.com'],
-      },
-    },
+    headers: false
+
+    // contentSecurityPolicy: {
+    //   'img-src': ["'self'", 'data:', '*'],
+    //   'connect-src': [
+    //     "'self'",
+    //     'https://identitytoolkit.googleapis.com',
+    //     'https://*.firebaseio.com', // Firebase Realtime Database
+    //     'https://firestore.googleapis.com', // Firestore
+    //     'https://*.googleapis.com', // General pattern for all Google APIs including Firebase
+    //     'https://*.gstatic.com',
+    //     'https://cdn.vuetifyjs.com' // For Firebase Hosting
+    //   ],
+    // },
+
   },
   veeValidate: {
     autoImports: true,
@@ -56,7 +66,7 @@ export default defineNuxtConfig({
       authDomain: process.env.FIREBASE_AUTH_DOMAIN,
       projectId: process.env.FIREBASE_PROJECT_ID,
       appId: process.env.FIREBASE_APP_ID,
-      storageBucket: "newtucusa.appspot.com",
+      storageBucket: 'newtucusa.appspot.com',
     },
   },
   nitro: {

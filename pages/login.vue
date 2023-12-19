@@ -4,8 +4,12 @@
       <div>
         <v-form>
           <v-text-field v-model="email.value.value" :error-messages="email.errorMessage.value" label="Email" />
-          <v-text-field v-model="password.value.value" :error-messages="password.errorMessage.value" label="Password"
-            type="password" />
+          <v-text-field
+            v-model="password.value.value"
+            :error-messages="password.errorMessage.value"
+            label="Password"
+            type="password"
+          />
           <v-btn type="submit" color="primary" :loading="buttonIsLoading" @click.prevent="submit">
             Submit
           </v-btn>
@@ -16,7 +20,7 @@
 </template>
 
 <script setup lang="ts">
-import { Auth, signInWithEmailAndPassword } from 'firebase/auth'
+import { type Auth, signInWithEmailAndPassword } from 'firebase/auth'
 definePageMeta({
   middleware: ['guest']
 })
@@ -29,13 +33,13 @@ const buttonIsLoading = ref(false)
 
 const { handleSubmit } = useForm({
   validationSchema: {
-    email(value: string) {
+    email (value: string) {
       if (/^[a-z0-9.-]+@[a-z0-9.-]+\.[a-z]+$/i.test(value)) { return true }
 
       return 'Must be a valid e-mail.'
     },
 
-    password(value: string) {
+    password (value: string) {
       if (!value) { return 'Password is required.' }
       if (value?.length <= 4) { return 'Password must be atleast 5 characters long' }
       return true
@@ -63,7 +67,6 @@ const submit = handleSubmit(async (values) => {
     } else {
       await router.push('/dashboard')
     }
-
 
     buttonIsLoading.value = false
   } catch (error: any) {

@@ -1,6 +1,5 @@
 const pdf = ref<string | null>(null)
 export const usePdf = () => {
-
   const setPdf = (url: string) => {
     // console.log(pdf)
     // console.log(url)

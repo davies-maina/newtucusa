@@ -3,15 +3,12 @@ export const firestoreFuncs = () => {
     const db = useFirestore()
 
     const { errorMess, alert, isError, resetAll } = useShowUserFeedBack()
-    const setUserDocument = async (collectionName: string, id: string, payload: any,merge:boolean=false) => {
-        const user = await getCurrentUser()
-
+    const setUserDocument = async (collectionName: string, id: string, payload: any, merge: boolean = false) => {
         resetAll()
         try {
-            await setDoc(doc(db, collectionName, id), payload,{merge:merge})
+            await setDoc(doc(db, collectionName, id), payload, { merge })
             return true
         } catch (error: any) {
-            console.log('e', error)
             isError.value = true
 
             errorMess.value = error.code
@@ -26,7 +23,6 @@ export const firestoreFuncs = () => {
             const docRef = await addDoc(collection(db, collectionName), payload)
             return docRef.id
         } catch (error: any) {
-            console.log('e', error)
             isError.value = true
 
             errorMess.value = error.code
@@ -37,13 +33,9 @@ export const firestoreFuncs = () => {
     const deleteDocument = async (collectionName: string, id: string) => {
         resetAll()
         try {
-
-            await deleteDoc(doc(db, collectionName, id));
+            await deleteDoc(doc(db, collectionName, id))
             return true
-
-        }
-        catch (error: any) {
-            console.log('e', error)
+        } catch (error: any) {
             isError.value = true
 
             errorMess.value = error.code
@@ -56,12 +48,9 @@ export const firestoreFuncs = () => {
         try {
             const docRef = doc(db, collection, id)
 
-            await updateDoc(docRef, payload);
+            await updateDoc(docRef, payload)
             return true
-
-        }
-        catch (error: any) {
-            console.log('e', error)
+        } catch (error: any) {
             isError.value = true
 
             errorMess.value = error.code
@@ -70,6 +59,6 @@ export const firestoreFuncs = () => {
         }
     }
     return {
-        setUserDocument, addDocument, deleteDocument,updateDocument
+        setUserDocument, addDocument, deleteDocument, updateDocument
     }
 }
