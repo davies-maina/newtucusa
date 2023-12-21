@@ -5,7 +5,7 @@
       <div v-if="result.dataURL" class="preview">
         <img :src="result.dataURL">
       </div>
-      <div v-if="currentUser.photoURL" class="preview">
+      <div v-if="currentUser.photoURL && !result.dataURL" class="preview">
         <img :src="currentUser.photoURL">
       </div>
       <!-- <v-avatar
@@ -68,6 +68,15 @@
           <v-card-title class="text-h5">
             Crop and upload
           </v-card-title>
+          <v-card-actions>
+            <v-spacer />
+            <v-btn color="green-darken-1" variant="text" @click="isShowModal = false">
+              Cancel
+            </v-btn>
+            <v-btn color="green-darken-1" variant="text" @click="getResult">
+              Crop
+            </v-btn>
+          </v-card-actions>
           <v-card-text>
             <ClientOnly>
               <VuePictureCropper
@@ -93,15 +102,6 @@
               />
             </ClientOnly>
           </v-card-text>
-          <v-card-actions>
-            <v-spacer />
-            <v-btn color="green-darken-1" variant="text" @click="isShowModal = false">
-              Cancel
-            </v-btn>
-            <v-btn color="green-darken-1" variant="text" @click="getResult">
-              Crop
-            </v-btn>
-          </v-card-actions>
         </v-card>
       </v-dialog>
     </v-row>

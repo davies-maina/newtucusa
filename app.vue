@@ -1,6 +1,8 @@
 <template>
   <div>
     <Html lang="en-US">
+      <NuxtLoadingIndicator />
+
       <NuxtLayout>
         <v-container fluid fill-height>
           <v-row justify="center">
